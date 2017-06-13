@@ -46,6 +46,7 @@ switch ($_REQUEST['do']) {
                                 <th>Número de Série</th>
                                 <?php break; ?>
                             <?php case 'bookings': ?>
+                            <?php case 'dailyBookings': ?>
                                 <th>Horário de Entrega</th>
                                 <th>Horário de Devolução</th>
                                 <th>Projetor</th>
@@ -99,6 +100,7 @@ switch ($_REQUEST['do']) {
                             <?php endforeach ?>
                             <?php break ?>
                         <?php case 'bookings': ?>
+                        <?php case 'dailyBookings': ?>
                             <?php foreach ($PDO as $object) : ?>
                                 <?php $o = $daoBooking->pojoBooking($object) ?>
                                 <tr>
@@ -135,6 +137,7 @@ switch ($_REQUEST['do']) {
                                 <th>Número de Série</th>
                                 <?php break; ?>
                             <?php case 'bookings': ?>
+                            <?php case 'dailyBookings': ?>
                                 <th>Horário de Entrega</th>
                                 <th>Horário de Devolução</th>
                                 <th>Projetor</th>
@@ -174,6 +177,7 @@ switch ($_REQUEST['do']) {
                     <a name="projectorEntryId" id="projectorEntryId">
                         <?php break; ?>
                         <?php case 'bookings': ?>
+                        <?php case 'dailyBookings': ?>
                         <a name="bookingEntryId" id="bookingEntryId">
                             <?php break; ?>
                         <?php endswitch ?>

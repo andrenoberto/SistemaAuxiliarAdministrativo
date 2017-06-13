@@ -20,7 +20,7 @@
 
 <link href="css/mouldifi-forms.css" rel="stylesheet">
 
-<?php if (THIS_SCRIPT == 'viewEntries' || THIS_SCRIPT == 'bookings') : ?>
+<?php if (THIS_SCRIPT == 'viewEntries' || THIS_SCRIPT == 'bookings' || THIS_SCRIPT == 'dailyBookings') : ?>
     <link href="css/plugins/datatables/jquery.dataTables.css" rel="stylesheet">
     <link href="js/plugins/datatables/extensions/Buttons/css/buttons.dataTables.css" rel="stylesheet">
 <?php endif ?>

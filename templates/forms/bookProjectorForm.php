@@ -6,10 +6,25 @@ require_once('./classes/connector/PojoBooking.php');
 
 $daoProjector = DaoProjector::getInstance();
 $projectorPDO = $daoProjector->listAll();
-
+/*
+ * Initializing important variables
+ */
 $modelName = "";
 $serialNumber = "";
 $actionUrl = "book.php?do=new";
+/*
+ * Edit form variables
+ */
+$daoBooking = '';
+$booking = '';
+$projector = '';
+$date = '';
+$startsAt = '';
+$endsAt = '';
+$requestedBy = '';
+$room = '';
+$course = '';
+
 
 if (isset($_REQUEST['do']) && $_REQUEST['do'] == 'new') {
     $daoBooking = new DaoBooking();
@@ -26,6 +41,17 @@ if (isset($_REQUEST['do']) && $_REQUEST['do'] == 'new') {
 } else if (isset($_REQUEST['do']) && $_REQUEST['do'] == 'delete' && isset($_REQUEST['id'])) {
     $daoBooking = new DaoBooking();
     $daoBooking->delete($_REQUEST['id']);
+} else if (isset($_REQUEST['do']) && $_REQUEST['do'] == 'edit' && isset($_REQUEST['id'])) {
+    $actionUrl = "book.php?do=edit";
+    $daoBooking = new DaoBooking();
+    $booking = $daoBooking->findById($_REQUEST['id']);
+    $projector = $booking->getModelName();
+    $date = $booking->getEditFormDate();
+    $startsAt = $booking->getEditFormStartsAtDate();
+    $endsAt = $booking->getEditFormEndsAtDate();
+    $requestedBy = $booking->getRequestedBy();
+    $room = $booking->getDestinationRoom();
+    $course = $booking->getDestinationCourse();
 }
 
 /*if (isset($_REQUEST['do']) && $_REQUEST['do'] == 'edit' && isset($_REQUEST['id'])) {
@@ -142,27 +168,43 @@ if (isset($_REQUEST['do']) && $_REQUEST['do'] == 'new') {
                 <?php endif ?>
                 <div id="results" <?= (isset($_REQUEST['do']) && $_REQUEST['do'] == 'edit' ? '' : 'class="hide-element"') ?>>
                     <form class="form-horizontal" method="post" action="<?= $actionUrl ?>">
+                        <?php if (isset($_REQUEST['do']) && $_REQUEST['do'] == 'edit') : ?>
+                            <input type="text" id="id" name="id" value="<?= $_REQUEST['id'] ?>" hidden>
+                        <?php endif ?>
                         <?php if (!isset($_REQUEST['do']) or (isset($_REQUEST['do']) && ($_REQUEST['do'] == 'new' or $_REQUEST['do'] == 'delete'))) : ?>
                             <div class="line-dashed"></div>
                         <?php endif ?>
-                        <div class="form-group">
-                            <label for="projector" class="col-sm-3 control-label">Projetor</label>
-                            <div class="col-sm-3">
-                                <select id="projector" name="projector" class="form-control"
-                                        data-placeholder="Selecione um projetor">
-                                    <option>Selecione um projetor</option>
-                                    <?php foreach ($projectorPDO as $object): ?>
-                                        <option id="opt_<?= $object['id'] ?>" value="<?= $object['id'] ?>"
-                                                class="hide-element"><?= $object['modelo'] ?></option>
-                                    <?php endforeach; ?>
-                                </select>
+                        <?php if (!isset($_REQUEST['do']) or (isset($_REQUEST['do']) && ($_REQUEST['do'] == 'new' or $_REQUEST['do'] == 'delete'))): ?>
+                            <div class="form-group">
+                                <label for="projector" class="col-sm-3 control-label">Projetor</label>
+                                <div class="col-sm-3">
+                                    <select id="projector" name="projector" class="form-control"
+                                            data-placeholder="Selecione um projetor">
+                                        <option>Selecione um projetor</option>
+                                        <?php foreach ($projectorPDO as $object): ?>
+                                            <option id="opt_<?= $object['id'] ?>" value="<?= $object['id'] ?>"
+                                                    class="hide-element"><?= $object['modelo'] ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
+                        <?php else: ?>
+                            <div class="form-group">
+                                <label for="projector_selected" class="col-sm-3 control-label">Projetor</label>
+                                <div class="col-sm-3">
+                                    <div class="input-group">
+                                        <input id="projector_selected" name="projector_selected" type="text"
+                                               class="form-control" value="<?= $projector ?>" readonly="readonly">
+                                        <span class="input-group-addon"><i class="icon-lamp"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endif; ?>
                         <div class="form-group">
                             <label for="date" class="col-sm-3 control-label">Data da Reserva</label>
                             <div class="col-sm-3">
                                 <div class="input-group">
-                                    <input id="date" name="date" type="text" class="form-control" readonly="readonly">
+                                    <input id="date" name="date" type="text" class="form-control" value="<?= $date ?>" readonly="readonly">
                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                 </div>
                             </div>
@@ -172,7 +214,7 @@ if (isset($_REQUEST['do']) && $_REQUEST['do'] == 'new') {
                             <div class="col-sm-3">
                                 <div class="input-group">
                                     <input id="startsAt" name="startsAt" type="text" maxlength="5" data-mask="99:99"
-                                           class="form-control" readonly="readonly">
+                                           class="form-control" value="<?= $startsAt ?>" readonly="readonly">
                                     <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
                                 </div>
                             </div>
@@ -182,7 +224,7 @@ if (isset($_REQUEST['do']) && $_REQUEST['do'] == 'new') {
                             <div class="col-sm-3">
                                 <div class="input-group">
                                     <input id="endsAt" name="endsAt" type="text" maxlength="5" data-mask="99:99"
-                                           class="form-control" readonly="readonly">
+                                           class="form-control" value="<?= $endsAt ?>" readonly="readonly">
                                     <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
                                 </div>
                             </div>
@@ -192,7 +234,7 @@ if (isset($_REQUEST['do']) && $_REQUEST['do'] == 'new') {
                             <div class="col-sm-3">
                                 <div class="input-group">
                                     <input id="requestedBy" name="requestedBy" type="text" maxlength="80"
-                                           class="form-control">
+                                           value="<?= $requestedBy ?>" class="form-control">
                                     <span class="input-group-addon"><i class="fa fa-user"></i></span>
                                 </div>
                             </div>
@@ -201,7 +243,7 @@ if (isset($_REQUEST['do']) && $_REQUEST['do'] == 'new') {
                             <label for="room" class="col-sm-3 control-label">Sala</label>
                             <div class="col-sm-3">
                                 <div class="input-group">
-                                    <input id="room" name="room" type="text" maxlength="80" class="form-control">
+                                    <input id="room" name="room" type="text" maxlength="80" value="<?= $room ?>" class="form-control">
                                     <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
                                 </div>
                             </div>
@@ -210,7 +252,7 @@ if (isset($_REQUEST['do']) && $_REQUEST['do'] == 'new') {
                             <label for="course" class="col-sm-3 control-label">Curso</label>
                             <div class="col-sm-3">
                                 <div class="input-group">
-                                    <input id="course" name="course" type="text" maxlength="80" class="form-control">
+                                    <input id="course" name="course" type="text" maxlength="80" value="<?= $course ?>" class="form-control">
                                     <span class="input-group-addon"><i class="fa fa-university"></i></span>
                                 </div>
                             </div>

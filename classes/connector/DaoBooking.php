@@ -30,6 +30,21 @@ class DaoBooking
         }
     }
 
+    public function findById($id)
+    {
+        try {
+            $sql = "SELECT reservas_projetor.id AS id, hora_inicial, hora_final, sala, curso, modelo, solicitacao_reserva, data_reserva FROM reservas_projetor INNER JOIN projetor ON reservas_projetor.projetor_id = projetor.id WHERE reservas_projetor.id = :id";
+            $p_sql = Connection::getInstance()->prepare($sql);
+            $p_sql->bindValue(":id", $id);
+            $p_sql->execute();
+
+            return $this->pojoBooking($p_sql->fetch(PDO::FETCH_ASSOC));
+        } catch (Exception $e) {
+            print $e->getMessage() . ": " . $e->getCode();
+            return null;
+        }
+    }
+
     public static function getInstance()
     {
         if (!isset(self::$instance)) {
@@ -42,7 +57,7 @@ class DaoBooking
     public function listAll($dailyBookings = false)
     {
         try {
-            $sql = "SELECT reservas_projetor.id AS id, hora_inicial, hora_final, sala, curso, modelo, data_registro FROM reservas_projetor INNER JOIN projetor ON reservas_projetor.projetor_id = projetor.id";
+            $sql = "SELECT reservas_projetor.id AS id, hora_inicial, hora_final, sala, curso, modelo, data_registro, data_reserva FROM reservas_projetor INNER JOIN projetor ON reservas_projetor.projetor_id = projetor.id";
             if ($dailyBookings) {
                 $sql .= " WHERE data_reserva = CONVERT(DATE, CURRENT_TIMESTAMP)";
             } else {
@@ -83,6 +98,8 @@ class DaoBooking
 
     public function insert(PojoBooking $pojoBooking)
     {
+        //TODO: check if those dates are still available before inserting a new booking into database. This is fucking important since we just have a client side validation which can be easily exploited
+
         $sql = "INSERT INTO reservas_projetor (projetor_id, data_reserva, hora_inicial, hora_final, responsavel_reserva, solicitacao_reserva, sala, curso, data_registro) 
                 VALUES (:projectorId, :bookingDate, :startsAt, :endsAt, :bookedBy, :requestedBy, :room, :course, CURRENT_TIMESTAMP)";
 
@@ -123,6 +140,29 @@ class DaoBooking
                     throw $e;
                 }
             }
+        }
+    }
+
+    public function update(PojoBooking $booking)
+    {
+        try {
+            $sql = "UPDATE reservas_projetor SET solicitacao_reserva = :requestedBy, sala = :room, curso = :course WHERE id = :id";
+            $p_sql = Connection::getInstance()->prepare($sql);
+            $p_sql->bindValue(":requestedBy", $booking->getRequestedBy());
+            $p_sql->bindValue(":room", $booking->getDestinationRoom());
+            $p_sql->bindValue(":course", $booking->getDestinationCourse());
+            $p_sql->bindValue(":id", $booking->getId());
+            if ($p_sql->execute()) {
+                Alerts::setAlert('success', 'bookingUpdated');
+                return true;
+            } else {
+                Alerts::setAlert('danger', "Error " . $p_sql->errorCode() . ": " . $p_sql->errorInfo()[2]);
+                return false;
+            }
+
+        } catch (Exception $e) {
+            print $e->getMessage() . ": " . $e->getCode();
+            return null;
         }
     }
 

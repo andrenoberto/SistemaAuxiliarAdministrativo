@@ -42,6 +42,7 @@ class Alerts
             case 'projectorSuccess':
                 $message = "Registro gravado com sucesso.";
                 break;
+            case 'bookingUpdated':
             case 'professorUpdated':
             case 'projectorUpdated':
                 $message = "Registro atualizado com sucesso.";

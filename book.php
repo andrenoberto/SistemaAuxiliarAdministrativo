@@ -8,6 +8,22 @@ define('THIS_SCRIPT', 'book');
  */
 require_once('global.php');
 require_once('classes/templates/FormsTemplates.php');
+require_once('classes/connector/PojoBooking.php');
+require_once('classes/connector/DaoBooking.php');
+
+if (isset($_REQUEST['do'])) {
+    if ($_REQUEST['do'] == 'edit') {
+        if (isset($_POST['requestedBy']) && isset($_POST['room']) && isset($_POST['course']) && isset($_POST['id'])) {
+            $booking = new PojoBooking();
+            $booking->setRequestedBy($_POST['requestedBy']);
+            $booking->setDestinationRoom($_POST['room']);
+            $booking->setDestinationCourse($_POST['course']);
+            $booking->setId($_POST['id']);
+            $daoBooking = DaoBooking::getInstance();
+            $daoBooking->update($booking);
+        }
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">

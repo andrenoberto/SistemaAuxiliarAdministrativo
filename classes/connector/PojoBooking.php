@@ -32,7 +32,7 @@ class PojoBooking
      */
     public function setCreatedAt($createdAt)
     {
-        $this->createdAt = $createdAt;
+        $this->createdAt = trim($createdAt);
     }
 
     /**
@@ -48,7 +48,7 @@ class PojoBooking
      */
     public function setModelName($modelName)
     {
-        $this->modelName = $modelName;
+        $this->modelName = trim($modelName);
     }
 
     /**
@@ -97,7 +97,7 @@ class PojoBooking
      */
     public function setDate($date)
     {
-        $this->date = $date;
+        $this->date = trim($date);
     }
 
     /**
@@ -113,7 +113,7 @@ class PojoBooking
      */
     public function setId($id)
     {
-        $this->id = $id;
+        $this->id = trim($id);
     }
 
     /**
@@ -129,7 +129,35 @@ class PojoBooking
      */
     public function setProjectorId($projectorId)
     {
-        $this->projectorId = $projectorId;
+        $this->projectorId = trim($projectorId);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEditFormDate() {
+        $dateArray = explode('-', $this->getDate());
+        return "{$dateArray[2]}/{$dateArray[1]}/{$dateArray[0]}";
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEditFormStartsAtDate() {
+        $timeInDatabaseArray = explode(' ', $this->getStartsAt());
+        $timeArray = explode(':', $timeInDatabaseArray[1]);
+
+        return "{$timeArray[0]}:{$timeArray[1]}";
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEditFormEndsAtDate() {
+        $timeInDatabaseArray = explode(' ', $this->getEndsAt());
+        $timeArray = explode(':', $timeInDatabaseArray[1]);
+
+        return "{$timeArray[0]}:{$timeArray[1]}";
     }
 
     /**
@@ -145,7 +173,7 @@ class PojoBooking
      */
     public function setStartsAt($startsAt)
     {
-        $this->startsAt = $startsAt;
+        $this->startsAt = trim($startsAt);
     }
 
     /**
@@ -179,7 +207,7 @@ class PojoBooking
      */
     public function setEndsAt($endsAt)
     {
-        $this->endsAt = $endsAt;
+        $this->endsAt = trim($endsAt);
     }
 
     /**
@@ -195,7 +223,7 @@ class PojoBooking
      */
     public function setBookedBy($bookedBy)
     {
-        $this->bookedBy = $bookedBy;
+        $this->bookedBy = trim($bookedBy);
     }
 
     /**
@@ -211,7 +239,7 @@ class PojoBooking
      */
     public function setRequestedBy($requestedBy)
     {
-        $this->requestedBy = $requestedBy;
+        $this->requestedBy = trim($requestedBy);
     }
 
     /**
@@ -227,7 +255,7 @@ class PojoBooking
      */
     public function setDestinationRoom($destinationRoom)
     {
-        $this->destinationRoom = $destinationRoom;
+        $this->destinationRoom = trim($destinationRoom);
     }
 
     /**
@@ -243,6 +271,6 @@ class PojoBooking
      */
     public function setDestinationCourse($destinationCourse)
     {
-        $this->destinationCourse = $destinationCourse;
+        $this->destinationCourse = trim($destinationCourse);
     }
 }

@@ -18,6 +18,12 @@ class PageInfo
             case 'book':
                 $title = "Reservar Projetor";
                 break;
+            case 'bookings':
+                $title = "Visualizar Registros de Reservas";
+                break;
+            case 'dailyBookings':
+                $title = "Visualizar Registros de Reservas do Dia";
+                break;
             case 'index':
                 $title = "Dashboard";
                 break;
@@ -34,12 +40,6 @@ class PageInfo
                 break;
             case 'viewEntries':
                 switch ($_REQUEST['do']) {
-                    case 'bookings':
-                        $title = "Visualizar Registros de Reservas";
-                        break;
-                    case 'dailyBookings':
-                        $title = "Visualizar Registros de Reservas do Dia";
-                        break;
                     case 'professors':
                         $title = "Visualizar Registros de Professores";
                         break;

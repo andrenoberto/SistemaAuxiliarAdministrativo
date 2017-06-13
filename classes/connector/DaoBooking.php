@@ -45,6 +45,8 @@ class DaoBooking
             $sql = "SELECT reservas_projetor.id AS id, hora_inicial, hora_final, sala, curso, modelo, data_registro FROM reservas_projetor INNER JOIN projetor ON reservas_projetor.projetor_id = projetor.id";
             if ($dailyBookings) {
                 $sql .= " WHERE data_reserva = CONVERT(DATE, CURRENT_TIMESTAMP)";
+            } else {
+                $sql .= " WHERE data_reserva >= CONVERT(DATE, CURRENT_TIMESTAMP)";
             }
             $sql .= " ORDER BY hora_inicial ASC";
             $p_sql = Connection::getInstance()->prepare($sql);

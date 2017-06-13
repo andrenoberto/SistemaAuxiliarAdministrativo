@@ -19,7 +19,7 @@ switch ($_REQUEST['do']) {
     case 'dailyBookings':
         $dailyBookings = (THIS_SCRIPT == 'dailyBookings') ? true : false;
         $daoBooking = new DaoBooking();
-        $PDO = $daoBooking->listAll();
+        $PDO = $daoBooking->listAll($dailyBookings);
         break;
 }
 ?>

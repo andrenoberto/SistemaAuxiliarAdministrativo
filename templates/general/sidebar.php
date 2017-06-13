@@ -69,6 +69,8 @@ if (isset($_REQUEST['do'])) {
                 </li>
                 <li <?= Sidebar::getActiveClassAttribute('bookings') ?>><a href="viewEntries.php?do=bookings"><span class="title">Visualizar Reservas</span></a>
                 </li>
+                <li <?= Sidebar::getActiveClassAttribute('dailyBookings') ?>><a href="viewEntries.php?do=dailyBookings"><span class="title">Visualizar Reservas de Hoje</span></a>
+                </li>
             </ul>
         </li>
         <li class="has-sub <?= Sidebar::getLiActiveClass('viewEntries') ?>"><a href="#"><i class="icon-window"></i><span

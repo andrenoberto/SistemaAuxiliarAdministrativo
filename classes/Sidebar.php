@@ -49,6 +49,8 @@ class Sidebar
                     $class = 'active';
                 } else if (THIS_SCRIPT == 'bookings') {
                     $class = 'active';
+                } else if (THIS_SCRIPT == 'dailyBookings') {
+                    $class = 'active';
                 }
                 break;
             case 'viewEntries':

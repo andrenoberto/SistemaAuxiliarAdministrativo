@@ -35,6 +35,9 @@ class Alerts
             case 'bookingSuccess':
                 $message = "Projetor reservado com sucesso.";
                 break;
+            case 'projectorAlreadyBooked':
+                $message = "Este projetor já foi reservado. Por favor, verifique a disponibilidade novamente.";
+                break;
             case 'professorAlreadyInDatabase':
                 $message = "Erro.\nEste professor(a) já encontra-se cadastrado no banco de dados!";
                 break;

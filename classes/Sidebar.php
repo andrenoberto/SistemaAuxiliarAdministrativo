@@ -45,11 +45,10 @@ class Sidebar
                 }
                 break;
             case 'projectorBookings':
-                if (THIS_SCRIPT == 'book') {
-                    $class = 'active';
-                } else if (THIS_SCRIPT == 'bookings') {
-                    $class = 'active';
-                } else if (THIS_SCRIPT == 'dailyBookings') {
+                if (THIS_SCRIPT == 'book' ||
+                    THIS_SCRIPT == 'bookings' ||
+                    THIS_SCRIPT == 'dailyBookings'
+                ) {
                     $class = 'active';
                 }
                 break;
@@ -92,7 +91,8 @@ class Sidebar
                 break;
             case 'projectorBookings':
                 if (THIS_SCRIPT != 'book' ||
-                    THIS_SCRIPT != 'bookings') {
+                    THIS_SCRIPT != 'bookings' ||
+                    THIS_SCRIPT != 'dailyBookings') {
                     $class = 'collapse';
                 }
                 break;

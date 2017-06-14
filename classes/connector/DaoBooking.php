@@ -98,7 +98,27 @@ class DaoBooking
 
     public function insert(PojoBooking $pojoBooking)
     {
-        //TODO: check if those dates are still available before inserting a new booking into database. This is fucking important since we just have a client side validation which can be easily exploited
+        $dateArray = explode('/', $pojoBooking->getDate());
+        $startsAt = "{$dateArray[2]}-{$dateArray[1]}-{$dateArray[0]} {$pojoBooking->getStartsAt()}:00.000";
+        $endsAt = "{$dateArray[2]}-{$dateArray[1]}-{$dateArray[0]} {$pojoBooking->getEndsAt()}:00.000";
+
+        /*//TODO: check if those dates are still available before inserting a new booking into database. This is fucking important since we just have a client side validation which can be easily exploited
+        $sql = "SELECT * FROM reservas_projetor WHERE ((hora_inicial BETWEEN '{$startsAt}' AND '{$endsAt}') or (hora_final BETWEEN '{$startsAt}' AND '{$endsAt}')) or (('{$startsAt}' BETWEEN hora_inicial AND hora_final) or ('{$endsAt}' BETWEEN hora_inicial AND hora_final))";
+        $p_sql = Connection::getInstance()->prepare($sql);
+        $p_sql->execute();
+
+        $PDO = array();
+        while ($o = $p_sql->fetch(PDO::FETCH_ASSOC)) {
+            $PDO[] = $o;
+        }*/
+        $PDO = $this->findNotAvailableProjectors($startsAt, $endsAt);
+
+        foreach ($PDO as $booking) {
+            if ($pojoBooking->getProjectorId() == $booking['projetor_id']) {
+                Alerts::setAlert('danger', 'projectorAlreadyBooked');
+                return null;
+            }
+        }
 
         $sql = "INSERT INTO reservas_projetor (projetor_id, data_reserva, hora_inicial, hora_final, responsavel_reserva, solicitacao_reserva, sala, curso, data_registro) 
                 VALUES (:projectorId, :bookingDate, :startsAt, :endsAt, :bookedBy, :requestedBy, :room, :course, CURRENT_TIMESTAMP)";
